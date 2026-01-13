@@ -1,0 +1,19 @@
+# Netlify configuration for Angular frontend
+[build]
+  base = "web"
+  command = "npm install && npm run build"
+  publish = "dist/web/browser"
+
+# Redirect all requests to index.html for Angular routing
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# Environment variables (these will be set in Netlify dashboard)
+# API_URL will be configured in Netlify UI
+
+# Build optimizations
+[build.environment]
+  NODE_VERSION = "18"
+  NPM_FLAGS = "--legacy-peer-deps"
