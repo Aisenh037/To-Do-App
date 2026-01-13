@@ -1,0 +1,51 @@
+# Render Blueprint for Go Todo API
+# This file enables one-click deployment on Render
+# Learn more: https://render.com/docs/blueprint-spec
+
+services:
+  # Backend API Service
+  - type: web
+    name: go-todo-api
+    env: docker
+    plan: free
+    branch: main
+    healthCheckPath: /api/health
+    envVars:
+      - key: GIN_MODE
+        value: release
+      - key: SERVER_PORT
+        value: 8080
+      - key: USE_SQLITE
+        value: false
+      - key: ENABLE_SWAGGER
+        value: true
+      - key: ENABLE_METRICS
+        value: true
+      - key: JWT_SECRET
+        generateValue: true  # Auto-generates a secure secret
+      - key: DB_HOST
+        fromDatabase:
+          name: todo-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: todo-db
+          property: port
+      - key: DB_NAME
+        fromDatabase:
+          name: todo-db
+          property: database
+      - key: DB_USER
+        fromDatabase:
+          name: todo-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: todo-db
+          property: password
+
+databases:
+  # PostgreSQL Database
+  - name: todo-db
+    plan: free
+    databaseName: tododb

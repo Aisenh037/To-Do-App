@@ -22,8 +22,11 @@ WORKDIR /root/
 
 # Copy binary from builder
 COPY --from=builder /app/main .
-COPY --from=builder /app/.env.example .env
+
+# Copy docs for Swagger (if needed)
+COPY --from=builder /app/docs ./docs
 
 EXPOSE 8080
 
+# Environment variables will be provided by Render
 CMD ["./main"]
