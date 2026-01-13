@@ -1,0 +1,71 @@
+<div class="dashboard-container">
+    <!-- Header -->
+    <header class="dashboard-header">
+        <div class="header-content">
+            <h1>My Tasks</h1>
+            <div class="user-actions">
+                <span class="user-name" *ngIf="currentUser | async as user">
+                    Hi, {{ user.name }}
+                </span>
+                <button (click)="logout()" class="btn-logout">Logout</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="dashboard-main">
+        <!-- Toolbar -->
+        <div class="toolbar">
+            <div class="stats">
+                <span>{{ todos().length }} Tasks</span>
+            </div>
+            <button class="btn-add" (click)="showAddForm.set(!showAddForm())">
+                {{ showAddForm() ? 'Cancel' : '+ New Task' }}
+            </button>
+        </div>
+
+        <!-- Add Form -->
+        <div class="add-form-card" *ngIf="showAddForm()">
+            <form [formGroup]="todoForm" (ngSubmit)="addTodo()">
+                <div class="form-row">
+                    <input type="text" formControlName="title" placeholder="What needs to be done?" class="input-title">
+                </div>
+                <div class="form-row">
+                    <input type="text" formControlName="description" placeholder="Description (optional)">
+                </div>
+                <div class="form-actions">
+                    <button type="submit" [disabled]="todoForm.invalid" class="btn-primary btn-sm">
+                        Add Task
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Todo List -->
+        <div class="todo-list">
+            <div *ngIf="isLoading()" class="loading-state">
+                <div class="spinner"></div>
+            </div>
+
+            <div *ngIf="!isLoading() && todos().length === 0" class="empty-state">
+                <p>No tasks yet. Add one above!</p>
+            </div>
+
+            <div class="todo-item" *ngFor="let todo of todos()" [class.completed]="todo.status === 'completed'">
+                <div class="todo-content" (click)="toggleStatus(todo)">
+                    <div class="checkbox">
+                        <span *ngIf="todo.status === 'completed'">✓</span>
+                    </div>
+                    <div class="text">
+                        <h3>{{ todo.title }}</h3>
+                        <p *ngIf="todo.description">{{ todo.description }}</p>
+                    </div>
+                </div>
+                <div class="actions">
+                    <button (click)="deleteTodo(todo.id)" class="btn-icon" title="Delete">
+                        🗑️
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
